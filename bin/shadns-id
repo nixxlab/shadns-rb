@@ -22,11 +22,23 @@ if !ARGV[0]
   exit
 end
 
-key_pair = OpenSSH.parse_key_pair(File.read(ARGV[0]))
+file_data = File.read(ARGV[0])
+if ARGV[0][-4..] === '.pub'
+  key = OpenSSH.parse_public_key(file_data)
 
-raise "Can't parse this file!" if !key_pair
-raise "Can't use '#{key_pair[:type]}' key!" if key_pair[:type] != 'ed25519'
+  raise "Can't parse this file!" if !key
+  raise "Can't use '#{key[:type]}' key!" if key[:type] != 'ed25519'
 
-sha256_public = Digest::SHA2.new(256).digest(key_pair[:public])
-base36_sha256_public = Base36.from_str(sha256_public)
-puts base36_sha256_public
+  sha256_public = Digest::SHA2.new(256).digest(key[:data])
+  base36_sha256_public = Base36.from_str(sha256_public)
+  puts base36_sha256_public
+else
+  key_pair = OpenSSH.parse_key_pair(file_data)
+  
+  raise "Can't parse this file!" if !key_pair
+  raise "Can't use '#{key_pair[:type]}' key!" if key_pair[:type] != 'ed25519'
+
+  sha256_public = Digest::SHA2.new(256).digest(key_pair[:public])
+  base36_sha256_public = Base36.from_str(sha256_public)
+  puts base36_sha256_public
+end

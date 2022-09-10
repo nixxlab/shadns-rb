@@ -2,6 +2,16 @@ require 'base64'
 
 ###### OpenSSH keys parser
 module OpenSSH
+  def self.parse_public_key file_data
+    result = {}
+    file_type, key_data, result[:comments] = file_data.strip.gsub('  ', ' ').split(' ')
+    openssh_data = Base64.decode64(key_data)
+    key_type, offset = self.get_32bit_prefixed_string(openssh_data, 0)
+    result[:type] = key_type.split('-').last
+    result[:data], offset = self.get_32bit_prefixed_string(openssh_data, offset)
+    return result
+  end
+
   def self.parse_key_pair file_data
     openssh_data = Base64.decode64(file_data.gsub(/[\n]*--.+--[\n]*/, '').gsub("\n", ''))
     result = {}
