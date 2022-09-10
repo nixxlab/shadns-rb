@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'digest'
+
+require_relative '../lib/base36'
+require_relative '../lib/openssh'
+
+def print_hex data
+  data.bytesize.times do |i|
+    byte = data[i].ord
+    print '|  ' if (i) % 8 === 0
+    print ((byte < 16 ? '0' : '') + byte.to_s(16)).upcase
+    print ' '
+    print ' ' if (i + 1) % 4 === 0
+    print "|\n" if (i + 1) % 32 === 0
+  end
+end
+
+if !ARGV[0]
+  puts "shadns-id --- Get SHADNS domain identifier by OpenSSH key file"
+  puts "Usage: shadns-id ~/.ssh/openssh_ed25519_key"
+  exit
+end
+
+key_pair = OpenSSH.parse_key_pair(File.read(ARGV[0]))
+
+raise "Can't parse this file!" if !key_pair
+raise "Can't use '#{key_pair[:type]}' key!" if key_pair[:type] != 'ed25519'
+
+sha256_public = Digest::SHA2.new(256).digest(key_pair[:public])
+base36_sha256_public = Base36.from_str(sha256_public)
+puts base36_sha256_public
