@@ -1,0 +1,39 @@
+listen:
+  # ip: 0.0.0.0
+  port: 5301
+
+callback:
+  ip: 127.0.0.11
+  # port: 5301
+
+auth:
+  openssh: ./temp/node1_ed25519
+
+# List of bootstrap nodes
+bootstrap:
+  - 
+    domain: 4X2GMSFGQVWOFN4ZTPZSW13H35RHYXXN9CIDTMH3KI3J1X68J3
+    ip: 127.0.0.12
+    port: 5302
+  - 
+    domain: 38GW0CS15APGLMNK4RT72Q0BB81P16AWCVXG3G5LS7KBZ9522E
+    ip: 127.0.0.13
+    port: 5303
+  - 
+    domain: 55IBNA1YUIWPTT7OPXFBJABLHCGBDI375NRHA7BJIP6GW6CEI5
+    ip: 127.0.0.14
+    port: 5304
+  - 
+    domain: 45VAAC3J6VLDYA64Z12XT69XKFS0A3UU2MGD9O3YO4SU2MKQXK
+    ip: 127.0.0.15
+    port: 5305
+
+# root_domain: shad
+
+# Deny any requests
+# blacklist:
+#   - 1.2.3.4
+
+# Allow recursive requests without signature
+# whitelist:
+#   - 127.0.0.0/24
